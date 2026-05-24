@@ -40,7 +40,13 @@ jobs:
                     sed -i '/PARALLEL_MAKE/d' build/conf/local.conf
                     echo 'BB_NUMBER_THREADS = \"2\"' >> build/conf/local.conf
                     echo 'PARALLEL_MAKE = \"-j 2\"' >> build/conf/local.conf
+
+                    echo '=== Forcing BitBake to clear broken expat state ==='
+                    source poky/oe-init-build-env build
+                    bitbake expat -c cleansstate
+
                     echo '=== Starting original build script ==='
+                    cd ${GITHUB_WORKSPACE}
                     ./build.sh
                  "
           - name: Cleanup
