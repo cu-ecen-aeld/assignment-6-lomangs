@@ -25,16 +25,16 @@ jobs:
                  -v ${GITHUB_WORKSPACE}:${GITHUB_WORKSPACE} \
                  cuaesd/aesd-autotest:24-assignment6-yocto \
                  --workdir=${GITHUB_WORKSPACE} \
-                 sh -c "
-                    echo '=== Cleaning up stale BitBake locks ==='
-                    rm -f build/bitbake.lock
-                    rm -f build/bitbake-cookerdaemon.log
-                    rm -rf build/tmp/cache
-                    rm -rf build/tmp/locks  
+#                 sh -c "
+#                    echo '=== Cleaning up stale BitBake locks ==='
+#                    rm -f build/bitbake.lock
+#                    rm -f build/bitbake-cookerdaemon.log
+#                    rm -rf build/tmp/cache
+#                    rm -rf build/tmp/locks  
 
-                    echo '=== Starting Build ==='
+#                    echo '=== Starting Build ==='
                     ./build.sh
-                 "
+#                 "
           - name: Cleanup
             if: always()
             run: |
