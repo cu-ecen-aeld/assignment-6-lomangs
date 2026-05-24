@@ -41,8 +41,16 @@ jobs:
                     echo 'BB_NUMBER_THREADS = \"2\"' >> build/conf/local.conf
                     echo 'PARALLEL_MAKE = \"-j 2\"' >> build/conf/local.conf
 
+                    # FIX: Start a background spinner that prints a dot every 30 seconds 
+                    # to prevent the GitHub runner from assuming the job has hung.
+                    exec 3>&1
+                    sh -c 'while true; do echo \"[Keep-Alive] Still building...\" >&3; sleep 30; done' &
+                    PING_PID=\$!
                     echo '=== Starting original build script ==='
                     ./build.sh
+                    
+                    # Kill the keep-alive loop once the build completes
+                    kill \$PING_PID
                  "
           - name: Cleanup
             if: always()
