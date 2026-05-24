@@ -25,7 +25,24 @@ jobs:
                  -v ${GITHUB_WORKSPACE}:${GITHUB_WORKSPACE} \
                  cuaesd/aesd-autotest:24-assignment6-yocto \
                  --workdir=${GITHUB_WORKSPACE} \
-                 ./build.sh
+                 sh -c "
+                    echo '=== Cleaning up stale lock files ==='
+                    rm -f build/bitbake.lock
+                    rm -f build/bitbake-cookerdaemon.log
+                    rm -rf build/tmp/cache
+                    rm -rf build/tmp/locks
+
+                    echo '=== Throttling resource usage to prevent OOM crashes ==='
+                    mkdir -p build/conf
+                    touch build/conf/local.conf
+                    # Force BitBake to use safe thread limits
+                    sed -i '/BB_NUMBER_THREADS/d' build/conf/local.conf
+                    sed -i '/PARALLEL_MAKE/d' build/conf/local.conf
+                    echo 'BB_NUMBER_THREADS = \"2\"' >> build/conf/local.conf
+                    echo 'PARALLEL_MAKE = \"-j 2\"' >> build/conf/local.conf
+                    echo '=== Starting original build script ==='
+                    ./build.sh
+                 "
           - name: Cleanup
             if: always()
             run: |
