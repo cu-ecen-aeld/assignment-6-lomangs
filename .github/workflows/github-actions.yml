@@ -27,8 +27,6 @@ jobs:
                  --workdir=${GITHUB_WORKSPACE} \
                  sh -c "
                     echo '=== Cleaning up stale BitBake locks ==='
-                    pkill -f bitbake || true
-                    pkill -f knotty || true
                     rm -f build/bitbake.lock
                     rm -f build/bitbake-cookerdaemon.log
                     rm -rf build/tmp/cache
